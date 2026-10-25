@@ -13,9 +13,9 @@ async function main() {
       }
 
       const todos = await loadTodos();
-
+      const maxId = Math.max(0, ...todos.map((todo) => todo.id));
       const newTodo = {
-        id: todos.length + 1,
+        id: maxId + 1,
         title,
         done: false,
       };
