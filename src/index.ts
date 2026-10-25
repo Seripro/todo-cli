@@ -1,28 +1,56 @@
-const [, , command, ...args] = process.argv;
+import { loadTodos, saveTodos } from "./store.js";
 
-switch (command) {
-  case "add":
-    console.log("追加:", args.join(" "));
-    break;
+async function main() {
+  const [, , command, ...args] = process.argv;
 
-  case "list":
-    console.log("一覧を表示します");
-    break;
+  switch (command) {
+    case "add": {
+      const title = args.join(" ");
 
-  case "done":
-    console.log("完了:", args[0]);
-    break;
+      if (!title) {
+        console.log("追加するTodoを入力してください。");
+        break;
+      }
 
-  case "delete":
-    console.log("削除:", args[0]);
-    break;
+      const todos = await loadTodos();
 
-  default:
-    console.log(`
+      const newTodo = {
+        id: todos.length + 1,
+        title,
+        done: false,
+      };
+
+      todos.push(newTodo);
+      await saveTodos(todos);
+
+      console.log(`追加しました: ${newTodo.title}`);
+      break;
+    }
+
+    case "list":
+      console.log("一覧を表示します");
+      break;
+
+    case "done":
+      console.log("完了:", args[0]);
+      break;
+
+    case "delete":
+      console.log("削除:", args[0]);
+      break;
+
+    default:
+      console.log(`
 使い方:
   todo add "やること"
   todo list
   todo done <ID>
   todo delete <ID>
 `);
+  }
 }
+
+main().catch((error) => {
+  console.error("エラー:", error);
+  process.exit(1);
+});
