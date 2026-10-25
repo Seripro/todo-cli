@@ -66,9 +66,27 @@ async function main() {
       break;
     }
 
-    case "delete":
-      console.log("削除:", args[0]);
+    case "delete": {
+      const id = Number(args[0]);
+
+      if (!Number.isInteger(id)) {
+        console.log("削除するTodoのIDを指定してください。");
+        break;
+      }
+
+      const todos = await loadTodos();
+      const filteredTodos = todos.filter((todo) => todo.id !== id);
+
+      if (filteredTodos.length === todos.length) {
+        console.log(`ID ${id} のTodoは見つかりません。`);
+        break;
+      }
+
+      await saveTodos(filteredTodos);
+
+      console.log(`ID ${id} のTodoを削除しました。`);
       break;
+    }
 
     default:
       console.log(`
