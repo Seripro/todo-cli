@@ -27,9 +27,21 @@ async function main() {
       break;
     }
 
-    case "list":
-      console.log("一覧を表示します");
+    case "list": {
+      const todos = await loadTodos();
+
+      if (todos.length === 0) {
+        console.log("Todoはありません。");
+        break;
+      }
+
+      for (const todo of todos) {
+        const mark = todo.done ? "x" : " ";
+        console.log(`${todo.id}. [${mark}] ${todo.title}`);
+      }
+
       break;
+    }
 
     case "done":
       console.log("完了:", args[0]);
