@@ -43,9 +43,28 @@ async function main() {
       break;
     }
 
-    case "done":
-      console.log("完了:", args[0]);
+    case "done": {
+      const id = Number(args[0]);
+
+      if (!Number.isInteger(id)) {
+        console.log("完了するTodoのIDを指定してください。");
+        break;
+      }
+
+      const todos = await loadTodos();
+      const todo = todos.find((todo) => todo.id === id);
+
+      if (!todo) {
+        console.log(`ID ${id} のTodoは見つかりません。`);
+        break;
+      }
+
+      todo.done = true;
+      await saveTodos(todos);
+
+      console.log(`完了しました: ${todo.title}`);
       break;
+    }
 
     case "delete":
       console.log("削除:", args[0]);
